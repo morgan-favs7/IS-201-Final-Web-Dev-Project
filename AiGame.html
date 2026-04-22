@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Style Studio ✨</title>
+    <style>
+        /* CSS: This styles the game */
+        body { 
+            font-family: 'Courier New', Courier, monospace; /* Retro, creative vibe */
+            background-color: #ffe0f0; 
+            text-align: center; 
+            margin: 0; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh;
+        }
+
+        .studio-container {
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            border: 4px solid #ff99cc; /* Colorful border */
+            max-width: 400px;
+            width: 90%;
+        }
+
+        h1 {
+            color: #ff6b6b;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 1px 1px 0 #fff, 2px 2px 0 #ccc; /* Fun text effect */
+        }
+
+        .outfit-display {
+            font-size: 60px;
+            margin: 30px 0;
+            min-height: 100px;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px;
+            background: #fafafa;
+            border-radius: 10px;
+            border: 2px solid #ddd;
+            transition: transform 0.2s ease-in-out; /* Bounce animation */
+        }
+
+        /* The animation class */
+        .bounce { transform: translateY(-10px); }
+
+        .btn-group { display: flex; gap: 10px; justify-content: center; }
+
+        button { 
+            padding: 12px 25px; 
+            cursor: pointer; 
+            border: none; 
+            border-radius: 25px; 
+            background: #ff6b6b; 
+            color: white; 
+            font-weight: bold; 
+            font-size: 16px;
+            transition: 0.2s, background 0.2s; 
+            font-family: 'Courier New', monospace;
+        }
+
+        button:hover { background: #ff4757; transform: scale(1.05); }
+        .save-btn { background: #6dd5ed; }
+        .save-btn:hover { background: #2193b0; }
+
+        .saved-section {
+            margin-top: 30px;
+            text-align: left;
+            border-top: 2px solid #eee;
+            padding-top: 15px;
+            max-height: 200px;
+            overflow-y: auto; /* Scroll if there are too many saved looks */
+        }
+
+        .saved-section h3 { color: #555; font-size: 18px; margin-bottom: 10px;}
+        
+        #saved-list { list-style: none; padding: 0; margin: 0; }
+        #saved-list li {
+            font-size: 24px;
+            background: #fffafa;
+            margin-bottom: 8px;
+            padding: 8px;
+            border-radius: 5px;
+            border: 1px solid #ffccdd;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .delete-btn { font-size: 12px; padding: 5px 10px; background: #e74c3c; border-radius: 5px;}
+        .delete-btn:hover { background: #c0392b; }
+
+    </style>
+</head>
+<body>
+
+<div class="studio-container">
+    <h1>Style Studio 👠</h1>
+    
+    <div id="outfit" class="outfit-display">
+        <span>👕</span>
+        <span>👖</span>
+        <span>👟</span>
+    </div>
+
+    <div class="btn-group">
+        <button id="generate-btn">Get New Look!</button>
+        <button id="save-btn" class="save-btn">♥ Favorite</button>
+    </div>
+
+    <div class="saved-section">
+        <h3>Saved Fits:</h3>
+        <ul id="saved-list">
+            </ul>
+    </div>
+</div>
+
+<script>
+    /* JAVASCRIPT: This makes the game work */
+
+    // 1. Creative Data: Emojis are used for visualization
+    const tops = ["👕", "👚", "🧥", "👔", "👘", "🎽", "👚"];
+    const bottoms = ["👖", "🩳", "👗", "🩱", "👖", "👖", "👗"]; // Multiple 👖 & 👗 for slightly more frequent drops
+    const shoes = ["👟", "👠", "👢", "👡", "👞", "⛸️", "👟"];
+
+    // 2. DOM Elements: Connecting JS to HTML
+    const generateBtn = document.getElementById('generate-btn');
+    const saveBtn = document.getElementById('save-btn');
+    const outfitDisplay = document.getElementById('outfit');
+    const savedList = document.getElementById('saved-list');
+
+    // 3. Game Logic: The random generator function
+    function generateOutfit() {
+        // Add a bounce animation class
+        outfitDisplay.classList.add('bounce');
+        
+        // Pick a random item from each category
+        const randomTop = tops[Math.floor(Math.random() * tops.length)];
+        const randomBottom = bottoms[Math.floor(Math.random() * bottoms.length)];
+        const randomShoes = shoes[Math.floor(Math.random() * shoes.length)];
+        
+        // Short timeout makes the "spin" or "bounce" effect visible
+        setTimeout(() => {
+            // Update the HTML display with the new outfit
+            outfitDisplay.innerHTML = `<span>${randomTop}</span><span>${randomBottom}</span><span>${randomShoes}</span>`;
+            // Remove the bounce class so it can bounce again next time
+            outfitDisplay.classList.remove('bounce');
+        }, 150);
+    }
+
+    // 4. Functionality: Save the current look
+    function saveOutfit() {
+        // Get the current outfit HTML
+        const currentOutfitHTML = outfitDisplay.innerHTML;
+        
+        // Check if we already saved this exact look (optional check)
+        // ... advanced feature for later!
+
+        // Create a new list item
+        const li = document.createElement('li');
+        li.innerHTML = `${currentOutfitHTML} <button class="delete-btn">X</button>`;
+        
+        // Add a delete event to the new button
+        li.querySelector('.delete-btn').addEventListener('click', function() {
+            li.remove(); // Remove the list item when 'X' is clicked
+        });
+
+        // Add the new item to the saved gallery
+        savedList.appendChild(li);
+    }
+
+    // 5. Event Listeners: What to do when buttons are clicked
+    generateBtn.addEventListener('click', generateOutfit);
+    saveBtn.addEventListener('click', saveOutfit);
+
+    // Run the function once at start so the studio isn't empty
+    generateOutfit();
+
+</script>
+
+</body>
+</html>
